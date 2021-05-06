@@ -47,7 +47,4 @@ router.post(
 
 router.patch("/verify", verifyToken);
 
-router.post("/googlelogin", userGoogleLogin);
-router.post("/facebooklogin", userFacebookLogin);
-
 module.exports = router;
