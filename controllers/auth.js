@@ -47,7 +47,7 @@ const registerUser = async (req, res, next) => {
     };
 
     const token = await generateToken(payload, req, res);
-
+// KJJKL
     // var job = cron.schedule(
     //   '* * * * *',
     //   async () => {
