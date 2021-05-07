@@ -46,7 +46,7 @@ const connectExchange = async (req, res, next) => {
       return res
         .status(200)
         .json({ success: true, msg: "Additional Exchange Added" });
-    } else {
+    } else if (requiredExchanges.includes(exchangeName)) {
       const exchangeInfo = {
         userId: req.user.id,
         exchanges: [
@@ -57,174 +57,14 @@ const connectExchange = async (req, res, next) => {
           },
         ],
       };
-      if (exchangeName == "Binance") {
-        binanceConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Binance US") {
-        binanceUsConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Bitpanda pro") {
-        bitpandaProConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Bitstamp") {
-        bitstampConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Coinbase | Pro") {
-        coinbaseProConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "HitBTC") {
-        hitbtcConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Kreken") {
-        krekenConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Liquid") {
-        liquidConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Okex") {
-        okexConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-      if (exchangeName == "Poloniex") {
-        poloniexConnection(exchangeInfo);
-        return res
-          .status(200)
-          .json({ success: true, msg: "Added Successfully" });
-      }
-
-      res.status(400).json({ success: false, msg: "Wrong Exchange" });
+      await createExchange(exchangeInfo);
+      return res.status(200).json({ success: true, msg: "Added Successfully" });
+    } else {
+      return res.status(400).json({ success: false, msg: "Wrong Exchange" });
     }
   } catch (error) {
     console.log(
       "🚀 ~ file: exchange.js ~ line 9 ~ connectExchange ~ error",
-      error
-    );
-  }
-};
-
-const binanceConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-
-const binanceUsConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const bitpandaProConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const bitstampConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const coinbaseProConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const hitbtcConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const krekenConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const liquidConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const okexConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
-      error
-    );
-  }
-};
-const poloniexConnection = async (exchangeData) => {
-  try {
-    return await createExchange(exchangeData);
-  } catch (error) {
-    console.log(
-      "🚀 ~ file: exchange.js ~ line 61 ~ binanceConnection ~ error",
       error
     );
   }
