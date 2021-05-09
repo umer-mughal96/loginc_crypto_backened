@@ -45,7 +45,11 @@ const connectExchange = async (req, res, next) => {
       await exchange.save();
       return res
         .status(200)
-        .json({ success: true, msg: "Additional Exchange Added" });
+        .json({
+          success: true,
+          msg: "Additional Exchange Added",
+          exchanges: exchange,
+        });
     } else if (requiredExchanges.includes(exchangeName)) {
       const exchangeInfo = {
         userId: req.user.id,
@@ -57,8 +61,10 @@ const connectExchange = async (req, res, next) => {
           },
         ],
       };
-      await createExchange(exchangeInfo);
-      return res.status(200).json({ success: true, msg: "Added Successfully" });
+      let exchanges = await createExchange(exchangeInfo);
+      return res
+        .status(200)
+        .json({ success: true, msg: "Added Successfully", exchanges });
     } else {
       return res.status(400).json({ success: false, msg: "Wrong Exchange" });
     }
