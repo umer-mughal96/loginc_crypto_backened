@@ -1,4 +1,4 @@
-const { getExchange, createExchange } = require("../../services/exchange");
+const { getExchange, createExchange, deleteExchange } = require("../../services/exchange");
 
 const connectExchange = async (req, res, next) => {
   try {
@@ -43,13 +43,11 @@ const connectExchange = async (req, res, next) => {
       };
       exchange.exchanges.unshift(newExchangeInfo);
       await exchange.save();
-      return res
-        .status(200)
-        .json({
-          success: true,
-          msg: "Additional Exchange Added",
-          exchanges: exchange,
-        });
+      return res.status(200).json({
+        success: true,
+        msg: "Additional Exchange Added",
+        exchanges: exchange,
+      });
     } else if (requiredExchanges.includes(exchangeName)) {
       const exchangeInfo = {
         userId: req.user.id,
@@ -70,10 +68,36 @@ const connectExchange = async (req, res, next) => {
     }
   } catch (error) {
     console.log(
-      "🚀 ~ file: exchange.js ~ line 9 ~ connectExchange ~ error",
+      "🚀 ~ file: exchange.js ~ line 72 ~ connectExchange ~ error",
       error
     );
   }
 };
 
-module.exports = { connectExchange };
+const getExchanges = async (req, res, next) => {
+  try {
+    const exchanges = await getExchange(req.user.id);
+    return res.status(200).json({ success: true, exchanges });
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: exchange.js ~ line 72 ~ connectExchange ~ error",
+      error
+    );
+  }
+};
+
+
+
+const deleteUserExchange = async (req, res, next) => {
+  try {
+    await deleteExchange(req.body.id , req.body.exchangeId);
+    return res.status(200).json({ success: true, msg : "Successfully Deleted" });
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: exchange.js ~ line 72 ~ connectExchange ~ error",
+      error
+    );
+  }
+};
+
+module.exports = { connectExchange, getExchanges,deleteUserExchange };

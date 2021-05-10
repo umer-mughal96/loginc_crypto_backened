@@ -13,9 +13,7 @@ router.get('/users', authenticated , isAdmin , getAllUsers);
 router.get('/editors', authenticated , isAdmin , getAllEditors);
 router.patch('/updateuser', authenticated, updateUser);
 router.patch('/updateuserp', authenticated, updateUserPassword);
-router.get('/archives', authenticated, getAllUserArchives);
 
 
-router.post('/report/:id', authenticated, reportAboutArticle);
 
 module.exports = router;

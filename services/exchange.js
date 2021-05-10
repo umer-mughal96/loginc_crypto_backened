@@ -22,4 +22,27 @@ const getExchange = async (userId) => {
   }
 };
 
-module.exports = { createExchange, getExchange };
+
+
+const deleteExchange = async (id,exchangeId) => {
+  try {
+    return await Exchange.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          exchanges: {
+            _id: exchangeId,
+          },
+        },
+      },
+      { safe: true, upsert: true }
+    );
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: exchange.js ~ line 10 ~ createExchange ~ error",
+      error
+    );
+  }
+};
+
+module.exports = { createExchange, getExchange,deleteExchange };
