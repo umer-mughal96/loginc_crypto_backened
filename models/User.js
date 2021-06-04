@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
@@ -23,15 +23,22 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
+      enum: ["admin", "user"],
+      default: "user",
     },
-    // phone: {
-    //   type: String,
-    //   required: true,
-    // },
+    package: {
+      type: String,
+      enum: ["Pro Plan", "Trader Plan","Hobbyist"],
+      default: null,
+    },
+    paid : {
+      type : Number,
+      default : null
+    }
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

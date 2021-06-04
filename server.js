@@ -7,7 +7,8 @@ const connectDB = require("./config/db");
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
-const exchangeRoute = require('./routes/exchanges/exchange')
+const exchangeRoute = require("./routes/exchanges/exchange");
+const adminRoute = require("./routes/admin/admin");
 
 const app = express();
 app.use(morgan("dev"));
@@ -18,14 +19,15 @@ dotenv.config({ path: "config/config.env" });
 connectDB();
 const PORT = process.env.PORT || 3001;
 
-
 //Exchange Routes
 
-app.use('/logiccrypto/api/v1/exchange' , exchangeRoute)
+app.use("/logiccrypto/api/v1/exchange", exchangeRoute);
 
 //User Routes
 app.use("/logiccrypto/api/v1/auth", authRoute);
 app.use("/logiccrypto/api/v1/user", userRoute);
+
+app.use("/logiccrypto/api/v1/admin", adminRoute);
 
 app.listen(PORT, () => {
   console.log(
