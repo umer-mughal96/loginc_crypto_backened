@@ -23,18 +23,18 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "user"],
+      enum: ["admin","user"],
       default: "user",
     },
     package: {
       type: String,
-      enum: ["Pro Plan", "Trader Plan","Hobbyist"],
+      enum: ["Pro Plan","Trader Plan","Hobbyist",null],
       default: null,
     },
-    paid : {
-      type : Number,
-      default : null
-    }
+    paid: {
+      type: Number,
+      default: null,
+    },
   },
   {
     timestamps: true,
