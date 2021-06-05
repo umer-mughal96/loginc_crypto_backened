@@ -40,10 +40,14 @@ const io = require("./socket").init(server);
 let connectedUsers = [];
 let connectedAdmins = [];
 
-const sendUsersToAllConnectedAdmins = () => {
-  console.log("send users to admins on disconnect");
+const sendUsersToAllConnectedAdmins = (msg) => {
+console.log("🚀 ~ file: server.js ~ line 44 ~ sendUsersToAllConnectedAdmins ~ msg", msg)
+  
   for (let i = 0; i < connectedAdmins.length; i++) {
     io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
+    // console.log("CONNECTED USERS " , connectedUsers)
+    // console.log("CONNECTED ADMINS " , connectedAdmins)
+    
   }
 };
 
@@ -57,10 +61,10 @@ io.on("connection", (socket) => {
       socketId: socket.id,
       id: info.data._id,
       email: info.data.email,
-      package: info.data.package,
-      firstName: info.data.firstName,
-      lastName: info.data.lastName,
-      paid: info.data.paid,
+      package : info.data.package ? info.data.package : "No PACKAGE",
+      paid : info.data.paid ? info.data.paid : "No PAID",
+      firstName : info.data.firstName ,
+      lastName :  info.data.lastName ,
     };
 
     if (info.data.role == "admin") {
@@ -78,7 +82,8 @@ io.on("connection", (socket) => {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
         connectedAdmins[index] = userObj;
       }
-      sendUsersToAllConnectedAdmins();
+      sendUsersToAllConnectedAdmins("ADMIN CONNECTION");
+
     } else {
       let userSocketIdExist = connectedUsers.find(
         (user) => user.socketId == socket.id
@@ -91,11 +96,7 @@ io.on("connection", (socket) => {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
         connectedAdmins[index] = userObj;
       }
-      console.log(
-        "🚀 ~ file: server.js ~ line 43 ~ connectedUsers",
-        connectedUsers
-      );
-      sendUsersToAllConnectedAdmins();
+      sendUsersToAllConnectedAdmins("USER CONNECTION");
     }
   });
 
@@ -105,10 +106,6 @@ io.on("connection", (socket) => {
     let index = connectedUsers.findIndex((user) => user.socketId == socket.id);
     connectedUsers.splice(index, 1);
     
-    console.log(
-      "🚀 ~ file: server.js ~ line 43 ~ connectedUsers",
-      connectedUsers
-    );
-    sendUsersToAllConnectedAdmins();
+    sendUsersToAllConnectedAdmins("DISCONNECT ADMIN");
   });
 });
