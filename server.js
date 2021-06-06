@@ -9,6 +9,14 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const exchangeRoute = require("./routes/exchanges/exchange");
 const adminRoute = require("./routes/admin/admin");
+const {
+  findUser,
+  connectedAdmins,
+  connectedUsers,
+  addUser,
+  updateUser,
+  removeUser
+} = require("./utils/users");
 
 const app = express();
 app.use(morgan("dev"));
@@ -37,17 +45,16 @@ const server = app.listen(PORT, () => {
 });
 const io = require("./socket").init(server);
 
-let connectedUsers = [];
-let connectedAdmins = [];
-
 const sendUsersToAllConnectedAdmins = (msg) => {
-console.log("🚀 ~ file: server.js ~ line 44 ~ sendUsersToAllConnectedAdmins ~ msg", msg)
-  
+  console.log(
+    "🚀 ~ file: server.js ~ line 44 ~ sendUsersToAllConnectedAdmins ~ msg",
+    msg
+  );
+
   for (let i = 0; i < connectedAdmins.length; i++) {
     io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
-    console.log("CONNECTED USERS " , connectedUsers)
-    console.log("CONNECTED ADMINS " , connectedAdmins)
-    
+    console.log("CONNECTED USERS ", connectedUsers);
+    console.log("CONNECTED ADMINS ", connectedAdmins);
   }
 };
 
@@ -61,40 +68,36 @@ io.on("connection", (socket) => {
       socketId: socket.id,
       id: info.data._id,
       email: info.data.email,
-      package : info.data.package ? info.data.package : "No PACKAGE",
-      paid : info.data.paid ? info.data.paid : "No PAID",
-      firstName : info.data.firstName ,
-      lastName :  info.data.lastName ,
+      package: info.data.package ? info.data.package : "No PACKAGE",
+      paid: info.data.paid ? info.data.paid : "No PAID",
+      firstName: info.data.firstName,
+      lastName: info.data.lastName,
     };
 
+    let id = info.data._id;
+    let socketId = socket.id;
+
     if (info.data.role == "admin") {
-      let userSocketIdExist = connectedAdmins.find(
-        (user) => user.socketId == socket.id
-      );
-      let userIdExist = connectedAdmins.find(
-        (user) => user.id == info.data._id
-      );
+      let userSocketIdExist = findUser(socketId, "admin");
+      let userIdExist = findUser(id, "admin");
 
       if (!userSocketIdExist && !userIdExist) {
-        connectedAdmins.push(userObj)
+        addUser(userObj, "admin");
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
-        connectedAdmins[index] = userObj;
+        updateUser(userObj, "admin", index);
       }
       sendUsersToAllConnectedAdmins("ADMIN CONNECTION");
-
     } else {
-      let userSocketIdExist = connectedUsers.find(
-        (user) => user.socketId == socket.id
-      );
-      let userIdExist = connectedUsers.find((user) => user.id == info.data._id);
+      let userSocketIdExist = findUser(socketId, "user");
+      let userIdExist = findUser(id, "user");
       if (!userSocketIdExist && !userIdExist) {
-        connectedUsers.push(userObj);
+        addUser(userObj, "user");
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
-        connectedAdmins[index] = userObj;
+        updateUser(userObj, "user", index);
       }
       sendUsersToAllConnectedAdmins("USER CONNECTION");
     }
@@ -104,8 +107,8 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", function () {
     let index = connectedUsers.findIndex((user) => user.socketId == socket.id);
-    connectedUsers.splice(index, 1);
-    
+    removeUser(index)
+
     sendUsersToAllConnectedAdmins("DISCONNECT ADMIN");
   });
 });
