@@ -45,8 +45,8 @@ console.log("🚀 ~ file: server.js ~ line 44 ~ sendUsersToAllConnectedAdmins ~ 
   
   for (let i = 0; i < connectedAdmins.length; i++) {
     io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
-    // console.log("CONNECTED USERS " , connectedUsers)
-    // console.log("CONNECTED ADMINS " , connectedAdmins)
+    console.log("CONNECTED USERS " , connectedUsers)
+    console.log("CONNECTED ADMINS " , connectedAdmins)
     
   }
 };

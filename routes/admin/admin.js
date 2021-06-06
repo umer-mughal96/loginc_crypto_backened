@@ -7,7 +7,9 @@ const {
   getAllArticles,
   updateArticle,
   deleteArticle,
-  getPackages
+  getPackages,
+  deActivateUser,
+  activateUser
 } = require("../../controllers/admin/admin");
 const { authenticated } = require("../../middleware/auth");
 const { isAdmin } = require("../../middleware/roles");
@@ -17,6 +19,8 @@ router.get("/users", authenticated, isAdmin, getAllUsers);
 
 router.patch("/edit/user/:user_id", authenticated, isAdmin, editUser);
 router.delete("/delete/user/:user_id", authenticated, isAdmin, deleteUser);
+router.patch("/deactivate/user/:user_id", authenticated, isAdmin, deActivateUser);
+router.patch("/activate/user/:user_id", authenticated, isAdmin, activateUser);
 
 router.post("/create/article", authenticated, isAdmin, createArticle);
 router.get("/articles", authenticated, isAdmin, getAllArticles);

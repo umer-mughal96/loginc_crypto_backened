@@ -42,6 +42,37 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+
+
+const deActivateUser = async (req, res, next) => {
+  try {
+    let id = req.params.user_id;
+    let updatedObject = {
+      active : false
+    }
+    await userServices.updateUser(id,updatedObject);
+    
+    return res.status(200).json({ success: true, msg: "Successfully Deactivate User" });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+const activateUser = async (req, res, next) => {
+  try {
+    let id = req.params.user_id;
+    let updatedObject = {
+      active : true
+    }
+    await userServices.updateUser(id,updatedObject);
+    return res.status(200).json({ success: true, msg: "Successfully Activate User" });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 const createArticle = async (req, res, next) => {
   try {
     req.body.userId = req.user.id;
@@ -107,4 +138,6 @@ module.exports = {
   updateArticle,
   deleteArticle,
   getPackages,
+  deActivateUser,
+  activateUser
 };
