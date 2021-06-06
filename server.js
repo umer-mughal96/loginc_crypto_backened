@@ -11,11 +11,12 @@ const exchangeRoute = require("./routes/exchanges/exchange");
 const adminRoute = require("./routes/admin/admin");
 const {
   findUser,
+  findIndex,
   connectedAdmins,
   connectedUsers,
   addUser,
   updateUser,
-  removeUser
+  removeUser,
 } = require("./utils/users");
 
 const app = express();
@@ -51,8 +52,10 @@ const sendUsersToAllConnectedAdmins = (msg) => {
     msg
   );
 
-  for (let i = 0; i < connectedAdmins.length; i++) {
-    io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
+  if (connectedAdmins.length > 0) {
+    for (let i = 0; i < 1; i++) {
+      io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
+    }
     console.log("CONNECTED USERS ", connectedUsers);
     console.log("CONNECTED ADMINS ", connectedAdmins);
   }
@@ -72,6 +75,7 @@ io.on("connection", (socket) => {
       paid: info.data.paid ? info.data.paid : "No PAID",
       firstName: info.data.firstName,
       lastName: info.data.lastName,
+      active: info.data.active,
     };
 
     let id = info.data._id;
@@ -96,7 +100,7 @@ io.on("connection", (socket) => {
         addUser(userObj, "user");
       }
       if (!userSocketIdExist && userIdExist) {
-        let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
+        let index = connectedUsers.findIndex((i) => i.id == info.data._id);
         updateUser(userObj, "user", index);
       }
       sendUsersToAllConnectedAdmins("USER CONNECTION");
@@ -106,9 +110,20 @@ io.on("connection", (socket) => {
   //SEND CONNECTED USERS TO ALL CONNECTED ADMINS EVEN WHEN DISCONENCT
 
   socket.on("disconnect", function () {
-    let index = connectedUsers.findIndex((user) => user.socketId == socket.id);
-    removeUser(index)
+    let indexCondition ;
+    let isAdminDisconnect = connectedAdmins.find(x => x.socketId == socket.id)
+    if(isAdminDisconnect){
+    
+      indexCondition = findIndex(socket.id , "admin");
 
-    sendUsersToAllConnectedAdmins("DISCONNECT ADMIN");
+    }else{
+      indexCondition = findIndex(socket.id , "user");
+    }
+    if (indexCondition.condition == "admin") {
+      removeUser(indexCondition.index , "admin");
+    }else{
+      removeUser(indexCondition.index , "user");
+      sendUsersToAllConnectedAdmins();
+    }
   });
-});
+}); 

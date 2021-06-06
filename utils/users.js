@@ -28,14 +28,35 @@ const updateUser = (obj, condition, index) => {
   }
 };
 
-const removeUser = (index) => {
-  connectedUsers.splice(index, 1);
+const removeUser = (index, condition) => {
+  if (condition == "admin") {
+    connectedAdmins.splice(index, 1);
+  } else {
+    connectedUsers.splice(index, 1);
+  }
+};
+
+const findIndex = (socketId, condition) => {
+  if (condition == "admin") {
+    let index = connectedAdmins.findIndex((user) => user.socketId == socketId);
+    return {
+      index,
+      condition,
+    };
+  } else {
+    let index = connectedUsers.findIndex((user) => user.socketId == socketId);
+    return {
+      index,
+      condition,
+    };
+  }
 };
 
 module.exports = {
   findUser,
   connectedUsers,
   connectedAdmins,
+  findIndex,
   addUser,
   updateUser,
   removeUser,

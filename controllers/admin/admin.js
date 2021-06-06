@@ -1,5 +1,10 @@
 const userServices = require("../../services/user");
 const articleServices = require("../../services/article");
+const {getIO} = require('../../socket')
+const {
+  connectedAdmins,
+  connectedUsers,
+} = require('../../utils/users')
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -51,8 +56,11 @@ const deActivateUser = async (req, res, next) => {
       active : false
     }
     await userServices.updateUser(id,updatedObject);
+    let findUser = connectedUsers.find(user => user.id == id)
+    console.log(getIO)
     
     return res.status(200).json({ success: true, msg: "Successfully Deactivate User" });
+
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
