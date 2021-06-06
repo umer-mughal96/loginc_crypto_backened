@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
       );
 
       if (!userSocketIdExist && !userIdExist) {
-        connectedAdmins.push(userObj);
+        connectedAdmins.push(userObj)
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
