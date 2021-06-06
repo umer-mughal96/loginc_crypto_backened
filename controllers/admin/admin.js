@@ -1,10 +1,7 @@
 const userServices = require("../../services/user");
 const articleServices = require("../../services/article");
-const {getIO} = require('../../socket')
-const {
-  connectedAdmins,
-  connectedUsers,
-} = require('../../utils/users')
+const { getIO } = require("../../socket");
+const { connectedAdmins, connectedUsers } = require("../../utils/users");
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -47,35 +44,38 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-
-
 const deActivateUser = async (req, res, next) => {
   try {
     let id = req.params.user_id;
     let updatedObject = {
-      active : false
+      active: false,
+    };
+    await userServices.updateUser(id, updatedObject);
+    let findUser = connectedUsers.find((user) => user.id == id);
+    if (findUser) {
+      getIO()
+        .to(findUser.socketId)
+        .emit("deactivate", { msg: "Your Account Deactivated" });
     }
-    await userServices.updateUser(id,updatedObject);
-    let findUser = connectedUsers.find(user => user.id == id)
-    console.log(getIO)
-    
-    return res.status(200).json({ success: true, msg: "Successfully Deactivate User" });
 
+    return res
+      .status(200)
+      .json({ success: true, msg: "Successfully Deactivate User" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 };
 
-
-
 const activateUser = async (req, res, next) => {
   try {
     let id = req.params.user_id;
     let updatedObject = {
-      active : true
-    }
-    await userServices.updateUser(id,updatedObject);
-    return res.status(200).json({ success: true, msg: "Successfully Activate User" });
+      active: true,
+    };
+    await userServices.updateUser(id, updatedObject);
+    return res
+      .status(200)
+      .json({ success: true, msg: "Successfully Activate User" });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -147,5 +147,5 @@ module.exports = {
   deleteArticle,
   getPackages,
   deActivateUser,
-  activateUser
+  activateUser,
 };

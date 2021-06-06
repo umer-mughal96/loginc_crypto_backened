@@ -11,6 +11,7 @@ module.exports = {
   },
   getIO: () => {
     if (!io) {
+      console.log("IO ERROR ")
       throw new Error('Socket.io not initialized!');
     }
     return io;

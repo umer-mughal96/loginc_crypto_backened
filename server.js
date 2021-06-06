@@ -10,7 +10,8 @@ const userRoute = require("./routes/user");
 const exchangeRoute = require("./routes/exchanges/exchange");
 const adminRoute = require("./routes/admin/admin");
 const {
-  findUser,
+  findUserById,
+  findUserBySocketId,
   findIndex,
   connectedAdmins,
   connectedUsers,
@@ -46,18 +47,11 @@ const server = app.listen(PORT, () => {
 });
 const io = require("./socket").init(server);
 
-const sendUsersToAllConnectedAdmins = (msg) => {
-  console.log(
-    "🚀 ~ file: server.js ~ line 44 ~ sendUsersToAllConnectedAdmins ~ msg",
-    msg
-  );
-
+const sendUsersToAllConnectedAdmins = () => {
   if (connectedAdmins.length > 0) {
     for (let i = 0; i < 1; i++) {
       io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
     }
-    console.log("CONNECTED USERS ", connectedUsers);
-    console.log("CONNECTED ADMINS ", connectedAdmins);
   }
 };
 
@@ -82,28 +76,32 @@ io.on("connection", (socket) => {
     let socketId = socket.id;
 
     if (info.data.role == "admin") {
-      let userSocketIdExist = findUser(socketId, "admin");
-      let userIdExist = findUser(id, "admin");
+      let userSocketIdExist = findUserBySocketId(socketId, "admin");
+      let userIdExist = findUserById(id, "admin");
 
       if (!userSocketIdExist && !userIdExist) {
         addUser(userObj, "admin");
+        console.log(connectedAdmins)
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
         updateUser(userObj, "admin", index);
+        console.log(connectedAdmins)
       }
-      sendUsersToAllConnectedAdmins("ADMIN CONNECTION");
+      sendUsersToAllConnectedAdmins();
     } else {
-      let userSocketIdExist = findUser(socketId, "user");
-      let userIdExist = findUser(id, "user");
+      let userSocketIdExist = findUserBySocketId(socketId, "user");
+      let userIdExist = findUserById(id, "user");
       if (!userSocketIdExist && !userIdExist) {
         addUser(userObj, "user");
+        console.log(connectedUsers)
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedUsers.findIndex((i) => i.id == info.data._id);
         updateUser(userObj, "user", index);
+        console.log(connectedUsers);
       }
-      sendUsersToAllConnectedAdmins("USER CONNECTION");
+      sendUsersToAllConnectedAdmins();
     }
   });
 
@@ -113,17 +111,19 @@ io.on("connection", (socket) => {
     let indexCondition ;
     let isAdminDisconnect = connectedAdmins.find(x => x.socketId == socket.id)
     if(isAdminDisconnect){
-    
+      
       indexCondition = findIndex(socket.id , "admin");
-
+      
     }else{
       indexCondition = findIndex(socket.id , "user");
     }
     if (indexCondition.condition == "admin") {
       removeUser(indexCondition.index , "admin");
+      console.log("🚀 ~ file: server.js ~ line 116 ~ connectedAdmins", connectedAdmins)
     }else{
       removeUser(indexCondition.index , "user");
       sendUsersToAllConnectedAdmins();
+      console.log("🚀 ~ file: server.js ~ line 116 ~ connectedAdmins", connectedUsers)
     }
   });
 }); 
