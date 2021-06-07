@@ -130,6 +130,7 @@ const deleteArticle = async (req, res, next) => {
 const getPackages = async (req, res, next) => {
   try {
     let pacakges = await userServices.getPackagesDetail();
+    console.log("🚀 ~ file: admin.js ~ line 133 ~ getPackages ~ pacakges", pacakges)
 
     return res.status(200).json({ success: true, pacakges });
   } catch (err) {

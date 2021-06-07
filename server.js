@@ -49,7 +49,7 @@ const io = require("./socket").init(server);
 
 const sendUsersToAllConnectedAdmins = () => {
   if (connectedAdmins.length > 0) {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < connectedAdmins.length; i++) {
       io.to(connectedAdmins[i].socketId).emit("activeUsers", connectedUsers);
     }
   }
@@ -81,12 +81,10 @@ io.on("connection", (socket) => {
 
       if (!userSocketIdExist && !userIdExist) {
         addUser(userObj, "admin");
-        console.log(connectedAdmins)
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedAdmins.findIndex((i) => i.id == info.data._id);
         updateUser(userObj, "admin", index);
-        console.log(connectedAdmins)
       }
       sendUsersToAllConnectedAdmins();
     } else {
@@ -94,12 +92,10 @@ io.on("connection", (socket) => {
       let userIdExist = findUserById(id, "user");
       if (!userSocketIdExist && !userIdExist) {
         addUser(userObj, "user");
-        console.log(connectedUsers)
       }
       if (!userSocketIdExist && userIdExist) {
         let index = connectedUsers.findIndex((i) => i.id == info.data._id);
         updateUser(userObj, "user", index);
-        console.log(connectedUsers);
       }
       sendUsersToAllConnectedAdmins();
     }
@@ -108,22 +104,20 @@ io.on("connection", (socket) => {
   //SEND CONNECTED USERS TO ALL CONNECTED ADMINS EVEN WHEN DISCONENCT
 
   socket.on("disconnect", function () {
-    let indexCondition ;
-    let isAdminDisconnect = connectedAdmins.find(x => x.socketId == socket.id)
-    if(isAdminDisconnect){
-      
-      indexCondition = findIndex(socket.id , "admin");
-      
-    }else{
-      indexCondition = findIndex(socket.id , "user");
+    let indexCondition;
+    let isAdminDisconnect = connectedAdmins.find(
+      (x) => x.socketId == socket.id
+    );
+    if (isAdminDisconnect) {
+      indexCondition = findIndex(socket.id, "admin");
+    } else {
+      indexCondition = findIndex(socket.id, "user");
     }
     if (indexCondition.condition == "admin") {
-      removeUser(indexCondition.index , "admin");
-      console.log("🚀 ~ file: server.js ~ line 116 ~ connectedAdmins", connectedAdmins)
-    }else{
-      removeUser(indexCondition.index , "user");
+      removeUser(indexCondition.index, "admin");
+    } else {
+      removeUser(indexCondition.index, "user");
       sendUsersToAllConnectedAdmins();
-      console.log("🚀 ~ file: server.js ~ line 116 ~ connectedAdmins", connectedUsers)
     }
   });
-}); 
+});

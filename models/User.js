@@ -23,22 +23,22 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin","user"],
+      enum: ["admin", "user"],
       default: "user",
     },
     package: {
       type: String,
-      enum: ["Pro Plan","Trader Plan","Hobbyist",null],
-      default: null,
+      enum: ["Pro Plan", "Trader Plan", "Hobbyist", "Starter", null],
+      default: "Starter",
     },
     paid: {
       type: Number,
       default: null,
     },
-    active : {
-      type : Boolean,
-      default : true
-    }
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

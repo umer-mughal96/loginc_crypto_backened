@@ -2,6 +2,9 @@ const userServices = require("../services/user");
 const authServices = require("../services/auth");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const Stripe = require("stripe");
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //Update User By Id
 
@@ -124,6 +127,23 @@ const getAllUserArchives = async (req, res, next) => {
   }
 };
 
+
+const stripePayment = async (req, res, next) => {
+  try {
+    const { id, totalPrice } = req.body;
+    const response = await stripe.paymentIntents.create({
+      amount: totalPrice * 100,
+      currency: "GBP",
+      description: "MyFlightPass",
+      payment_method: id,
+      confirm: true,
+    });
+    res.status(200).json({ success: true, response });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 module.exports = {
   updateUser,
   getUserById,
@@ -132,4 +152,5 @@ module.exports = {
   getAllUsers,
   getAllEditors,
   getAllUserArchives,
+  stripePayment
 };

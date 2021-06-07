@@ -22,32 +22,26 @@ const findUserBySocketId = (payload, condition) => {
 const addUser = (obj, condition) => {
   if (condition == "admin") {
     connectedAdmins.push(obj);
-    console.log("ADD NEW ADMIN");
   }
   if (condition == "user") {
     connectedUsers.push(obj);
-    console.log("ADD NEW USER");
   }
 };
 
 const updateUser = (obj, condition, index) => {
   if (condition == "admin") {
     connectedAdmins[index] = obj;
-    console.log("UPDATE ADMIN");
   }
   if (condition == "user") {
     connectedUsers[index] = obj;
-    console.log("UPDATE USER");
   }
 };
 
 const removeUser = (index, condition) => {
   if (condition == "admin") {
     connectedAdmins.splice(index, 1);
-    console.log("REMOVE ADMIN");
   } else {
     connectedUsers.splice(index, 1);
-    console.log("REMOVE USER");
   }
 };
 
