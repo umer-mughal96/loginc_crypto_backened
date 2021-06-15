@@ -28,7 +28,7 @@ const UserSchema = new Schema(
     },
     package: {
       type: String,
-      enum: ["Pro Plan", "Trader Plan", "Hobbyist", "Starter", null],
+      enum: ["Pro Plan", "Trader Plan", "Starter"],
       default: "Starter",
     },
     paid: {

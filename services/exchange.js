@@ -13,7 +13,9 @@ const createExchange = async (exchangeObj) => {
 
 const getExchange = async (userId) => {
   try {
-    return Exchange.findOne({ userId });
+    return Exchange.findOne({ userId }).select(
+      "exchanges.exchangeName exchanges._id"
+    );
   } catch (error) {
     console.log(
       "🚀 ~ file: exchange.js ~ line 10 ~ createExchange ~ error",
@@ -22,9 +24,7 @@ const getExchange = async (userId) => {
   }
 };
 
-
-
-const deleteExchange = async (id,exchangeId) => {
+const deleteExchange = async (id, exchangeId) => {
   try {
     return await Exchange.findByIdAndUpdate(
       id,
@@ -45,4 +45,4 @@ const deleteExchange = async (id,exchangeId) => {
   }
 };
 
-module.exports = { createExchange, getExchange,deleteExchange };
+module.exports = { createExchange, getExchange, deleteExchange };
