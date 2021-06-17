@@ -14,8 +14,20 @@ const createExchange = async (exchangeObj) => {
 const getExchange = async (userId) => {
   try {
     return Exchange.findOne({ userId }).select(
-      "exchanges.exchangeName exchanges._id"
+      "exchanges.exchangeName exchanges._id exchanges.apiKey"
     );
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: exchange.js ~ line 10 ~ createExchange ~ error",
+      error
+    );
+  }
+};
+
+
+const getAllExchangesWithKeys = async (userId) => {
+  try {
+    return Exchange.findOne({ userId })
   } catch (error) {
     console.log(
       "🚀 ~ file: exchange.js ~ line 10 ~ createExchange ~ error",
@@ -45,4 +57,4 @@ const deleteExchange = async (id, exchangeId) => {
   }
 };
 
-module.exports = { createExchange, getExchange, deleteExchange };
+module.exports = { createExchange, getExchange, deleteExchange,getAllExchangesWithKeys };

@@ -1,27 +1,31 @@
-let curTime = Number(new Date().getTime()).toFixed(0);
-let timestamp = "timestamp=" + curTime; // TIME STAMP
-const apiSecret =
-  "wGDjxZpwgQjFByEMHRT6J3K869UqMdj1V56RVcKHVCn64nDgVLol7IA2cCnZM7EU"; //SECRET KEY OF EXCHANGE
+const crypto = require('crypto')
+const axios = require('axios')
+
+
+let timestamp ;// TIME STAMP
+let apiSecret ; //SECRET KEY OF EXCHANGE
 
 //CREATE SIGNATURE
+
 
 const signature = (timestamp) => {
   return crypto.createHmac("sha256", apiSecret).update(timestamp).digest("hex");
 };
 
-const getCoins = () => {
+const getCoins = (serverTime,apiKey,secretKey) => {
   try {
+    apiSecret = secretKey ;
+    timestamp = "timestamp=" + serverTime;
     let signedSignature = signature(timestamp);
 
     let config = {
       headers: {
         "Content-Type": "application/json",
-        "X-MBX-APIKEY":
-          "axpHg2O3KVpC9fPJ7mObpORqkiIe49REjrCYU91CjTJOQ5toFRks6zY9C0clJ4Ui",
+        "X-MBX-APIKEY": apiKey,
       },
     };
 
-    return await axios.get(
+    return axios.get(
       `https://api.binance.com/sapi/v1/capital/config/getall?${timestamp}&signature=${signedSignature}`,
       config
     );

@@ -1,14 +1,11 @@
 const exchangeSevices = require("../services/exchange");
-const authServices = require("../services/auth");
-const bcrypt = require("bcrypt");
-const User = require("../models/User");
 const { default: axios } = require("axios");
 const crypto = require("crypto");
 const stripeClient = require("stripe")(
   "sk_test_51IyeYHAk9CJdz6j4sVXOtfaGM5sBCHcHY0ybvPWfnQZUploDADT8Y9wwP9G1EgMq80G0uC0VorY76ldxgJut9Wp100ZW8KYDjM"
 );
-const { parse, stringify } = require("flatted");
-import * as binanceServices from "../apiServices/binance";
+const { stringify } = require("flatted");
+const binanceServices = require('../apiServices/binance')
 
 //Update User By Id
 
@@ -35,7 +32,7 @@ const stripePayment = async (req, res, next) => {
 
 const getExchangesDataOfSpecificExchange = async (req, res, next) => {
   try {
-    let getExchanges = await exchangeSevices.getExchange(req.user.id);
+    let getExchanges = await exchangeSevices.getAllExchangesWithKeys(req.user.id);
 
     if (!getExchanges) {
       return res
@@ -44,11 +41,16 @@ const getExchangesDataOfSpecificExchange = async (req, res, next) => {
     }
     let findExchange = getExchanges.exchanges.find(
       (ex) => ex.exchangeName == req.query.name
-    );
+      );
+      
+      if(req.query.name == "Binance"){
+        let serverTime = await axios.get("https://api.binance.com/api/v3/time") //GET SERVER TIMESTAMP
+        let coins = await binanceServices.getCoins(serverTime.data.serverTime , findExchange.apiKey , findExchange.secretKey)
+        let jsonData = stringify(coins);
+        return res.status(200).json({success : true , coins : jsonData})
+      }
 
-    getBinanceCoins;
-
-    let jsonData = stringify(binanceCoins);
+   
 
     res.status(200).json({ success: true, coins: jsonData });
   } catch (err) {
