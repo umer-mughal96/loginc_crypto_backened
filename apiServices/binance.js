@@ -4,6 +4,33 @@ const axios = require('axios')
 
 let timestamp ;// TIME STAMP
 let apiSecret ; //SECRET KEY OF EXCHANGE
+let apiKey ; //API KEY OF EXCHANGE
+let binanceServerTime ; //SERVER TIME FROM BINANCE
+let config ;
+
+ const getBinanceAssets =async  (serverTime,bApiKey,secretKey) => {
+   
+   apiSecret = secretKey ;
+   apiKey = bApiKey;
+   binanceServerTime = serverTime;
+   timestamp = "timestamp=" + binanceServerTime;
+   config = {
+     headers: {
+       "Content-Type": "application/json",
+       "X-MBX-APIKEY": apiKey,
+      },
+    };
+  
+  
+  let coins = await  getCoins() ;
+  let acc = await getUserAccountData();
+  let data = {
+    coins : coins.data,
+    account : acc.data
+  }
+  return data ;
+
+}
 
 //CREATE SIGNATURE
 
@@ -12,21 +39,29 @@ const signature = (timestamp) => {
   return crypto.createHmac("sha256", apiSecret).update(timestamp).digest("hex");
 };
 
-const getCoins = (serverTime,apiKey,secretKey) => {
+
+//GET ALL COINS 
+
+const getCoins = () => {
   try {
-    apiSecret = secretKey ;
-    timestamp = "timestamp=" + serverTime;
+   
     let signedSignature = signature(timestamp);
 
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-        "X-MBX-APIKEY": apiKey,
-      },
-    };
+    return axios.get(
+      `${process.env.BINANCE_BASE_URL}/sapi/v1/capital/config/getall?${timestamp}&signature=${signedSignature}`,
+      config
+    );
+  } catch (error) {
+    console.log("🚀 ~ file: binance.js ~ line 30 ~ getCoins ~ error", error);
+  }
+};
+
+const getUserAccountData = () => {
+  try {
+    let signedSignature = signature(timestamp);
 
     return axios.get(
-      `https://api.binance.com/sapi/v1/capital/config/getall?${timestamp}&signature=${signedSignature}`,
+      `${process.env.BINANCE_BASE_URL}/api/v3/account?${timestamp}&signature=${signedSignature}`,
       config
     );
   } catch (error) {
@@ -41,6 +76,8 @@ const getCoins = (serverTime,apiKey,secretKey) => {
 
 
 
+
+
 module.exports = {
-    getCoins,
+  getBinanceAssets
 };

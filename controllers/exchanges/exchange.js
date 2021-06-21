@@ -15,6 +15,7 @@ const connectExchange = async (req, res, next) => {
       "Poloniex",
     ];
     const { apiKey, secretKey, exchangeName } = req.body;
+    
     if (!apiKey || !secretKey || !exchangeName) {
       return res.status(400).json({
         success: false,
@@ -28,6 +29,7 @@ const connectExchange = async (req, res, next) => {
       exchange.exchanges.find((obj) => obj.exchangeName == exchangeName);
 
     if (findExchangeWithSameName) {
+      console.log('Same Exchange Happen')
       return res
         .status(400)
         .json({ success: false, msg: "You wont add same exchange twice" });
@@ -36,11 +38,13 @@ const connectExchange = async (req, res, next) => {
       exchange &&
       requiredExchanges.includes(exchangeName)
     ) {
+      console.log('Unsifht New Exchange')
       let newExchangeInfo = {
         apiKey,
         secretKey,
         exchangeName,
       };
+      console.log(exchange)
       exchange.exchanges.unshift(newExchangeInfo);
       await exchange.save();
       return res.status(200).json({
@@ -49,6 +53,7 @@ const connectExchange = async (req, res, next) => {
         exchanges: exchange,
       });
     } else if (requiredExchanges.includes(exchangeName)) {
+      console.log('ADD new Exchange')
       const exchangeInfo = {
         userId: req.user.id,
         exchanges: [
