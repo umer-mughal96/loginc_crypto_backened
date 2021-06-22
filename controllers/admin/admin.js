@@ -1,7 +1,8 @@
 const userServices = require("../../services/user");
 const articleServices = require("../../services/article");
 const { getIO } = require("../../socket");
-const { connectedAdmins, connectedUsers } = require("../../utils/users");
+const { connectedUsers } = require("../../utils/users");
+const ExchangeName = require('../../models/ExNames')
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -138,6 +139,68 @@ const getPackages = async (req, res, next) => {
   }
 };
 
+
+const getExchanges = async (req, res, next) => {
+  try {
+
+    let exchangeNames = await ExchangeName.find()
+
+    return res.status(200).json({ success: true, exchangeNames });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+const createExchanges = async (req, res, next) => {
+  try {
+
+    let exchangeNames = await ExchangeName.find()
+
+    exchangeNames[0].exchangeName.push(req.body);
+    console.log(exchangeNames)
+
+    await exchangeNames[0].save();
+
+    return res.status(200).json({ success: true, msg: "Suceessfully add Exchange" });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+
+
+const inActiveExchange = async (req, res, next) => {
+  try {
+
+    let exchangeNames = await ExchangeName.find()
+
+    let exchange = exchangeNames[0].exchangeName.find((ex) => ex._id == req.body.id)
+
+    if (exchange.active == true) {
+
+      exchange.active = false;
+      console.log(exchangeNames[0].exchangeName)
+      await exchangeNames[0].save();
+
+      return res.status(200).json({ success: true, msg: "Suceessfully InActive Exchange" });
+
+    } else if (exchange.active == false) {
+      exchange.active = true;
+      await exchangeNames[0].save();
+
+      return res.status(200).json({ success: true, msg: "Suceessfully Active Exchange" });
+    }else{
+
+      return res.status(400).json({ success: true, msg: "Something Wrong" });
+    }
+
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   editUser,
@@ -149,4 +212,7 @@ module.exports = {
   getPackages,
   deActivateUser,
   activateUser,
+  createExchanges,
+  inActiveExchange,
+  getExchanges
 };

@@ -43,14 +43,10 @@ const getExchangesDataOfSpecificExchange = async (req, res, next) => {
     let findExchange = getExchanges.exchanges.find(
       (ex) => ex.exchangeName == req.query.name
       );
-    console.log("🚀 ~ file: user.js ~ line 46 ~ getExchangesDataOfSpecificExchange ~ findExchange", findExchange)
       
       if(req.query.name == "Binance"){
         let serverTime = await axios.get(`${process.env.BINANCE_BASE_URL}/api/v3/time`) //GET SERVER TIMESTAMP
-        // let accountDetail = await binanceServices.getUserAccountData();
-        // console.log("🚀 ~ file: user.js ~ line 49 ~ getExchangesDataOfSpecificExchange ~ accountDetail", accountDetail)
         let data = await binanceServices.getBinanceAssets(serverTime.data.serverTime , findExchange.apiKey , findExchange.secretKey)
-        // console.log("🚀 ~ file: user.js ~ line 51 ~ getExchangesDataOfSpecificExchange ~ data", data)
         
         let jsonData = stringify(data);
         return res.status(200).json({success : true , data : jsonData})

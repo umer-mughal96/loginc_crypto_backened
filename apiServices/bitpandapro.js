@@ -18,6 +18,7 @@ const getBitpandaAssets = async (bitApiKey) => {
           },
     }
     const data = await getUserAssets()
+    console.log("🚀 ~ file: bitpandapro.js ~ line 21 ~ getBitpandaAssets ~ data", data)
     return data ;
 }
 

@@ -9,7 +9,10 @@ const {
   deleteArticle,
   getPackages,
   deActivateUser,
-  activateUser
+  activateUser,
+  createExchanges,
+  inActiveExchange,
+  getExchanges
 } = require("../../controllers/admin/admin");
 const { authenticated } = require("../../middleware/auth");
 const { isAdmin } = require("../../middleware/roles");
@@ -23,6 +26,7 @@ router.patch("/deactivate/user/:user_id", authenticated, isAdmin, deActivateUser
 router.patch("/activate/user/:user_id", authenticated, isAdmin, activateUser);
 
 router.post("/create/article", authenticated, isAdmin, createArticle);
+
 router.get("/articles", authenticated, isAdmin, getAllArticles);
 
 router.patch(
@@ -40,6 +44,14 @@ router.delete(
 
 
 
+
+
 router.get("/packages", authenticated, isAdmin, getPackages);
+
+
+
+router.get("/exchangenames", authenticated, isAdmin, getExchanges);
+router.post("/create/exchangename", authenticated, isAdmin, createExchanges);
+router.patch("/acintive/exchangename", authenticated, isAdmin, inActiveExchange);
 
 module.exports = router;
