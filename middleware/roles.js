@@ -11,12 +11,10 @@ const isCreator = (req, res, next) => {
 };
 
 
-
-
-const isEditorOrIsCreator = (req, res, next) => {
+const isAdminOrUser = (req, res, next) => {
   try {
     console.log("🚀 ~ file: roles.js ~ line 19 ~ isEditor ~ req.user.role", req.user.role)
-    if (req.user.role == 'editor' || req.user.role == 'creator') {
+    if (req.user.role == 'admin' || req.user.role == 'user') {
       next();
     } else {
       res.status(400).json({ success: false, msg: 'Access Denied' });
@@ -30,19 +28,6 @@ const isEditorOrIsCreator = (req, res, next) => {
 
 
 
-
-const isEditor = (req, res, next) => {
-  try {
-    console.log("🚀 ~ file: roles.js ~ line 19 ~ isEditor ~ req.user.role", req.user.role)
-    if (req.user.role == 'editor') {
-      next();
-    } else {
-      res.status(400).json({ success: false, msg: 'Access Denied' });
-    }
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
 
 
 const isAdmin = (req, res, next) => {
@@ -60,4 +45,4 @@ const isAdmin = (req, res, next) => {
 
 
 
-module.exports = {isCreator,isEditor,isEditorOrIsCreator,isAdmin}
+module.exports = {isCreator,isAdminOrUser,isAdmin}

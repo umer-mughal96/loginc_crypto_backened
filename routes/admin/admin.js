@@ -15,7 +15,7 @@ const {
   getExchanges
 } = require("../../controllers/admin/admin");
 const { authenticated } = require("../../middleware/auth");
-const { isAdmin } = require("../../middleware/roles");
+const { isAdminOrUser,isAdmin } = require("../../middleware/roles");
 const router = express.Router();
 
 router.get("/users", authenticated, isAdmin, getAllUsers);
@@ -50,7 +50,7 @@ router.get("/packages", authenticated, isAdmin, getPackages);
 
 
 
-router.get("/exchangenames", authenticated, isAdmin, getExchanges);
+router.get("/exchangenames", authenticated, isAdminOrUser, getExchanges);
 router.post("/create/exchangename", authenticated, isAdmin, createExchanges);
 router.patch("/acintive/exchangename", authenticated, isAdmin, inActiveExchange);
 

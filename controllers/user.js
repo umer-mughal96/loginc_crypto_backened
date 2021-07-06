@@ -7,6 +7,9 @@ const stripeClient = require("stripe")(
 const { stringify } = require("flatted");
 const binanceServices = require('../apiServices/binance')
 const bitpandaServices = require('../apiServices/bitpandapro')
+const poloniexServices = require('../apiServices/poloniex')
+const krakenServices = require('../apiServices/kraken')
+const okexServices = require('../apiServices/okex')
 
 //Update User By Id
 
@@ -42,23 +45,37 @@ const getExchangesDataOfSpecificExchange = async (req, res, next) => {
     }
     let findExchange = getExchanges.exchanges.find(
       (ex) => ex.exchangeName == req.query.name
-      );
-      
-      if(req.query.name == "Binance"){
-        let serverTime = await axios.get(`${process.env.BINANCE_BASE_URL}/api/v3/time`) //GET SERVER TIMESTAMP
-        let data = await binanceServices.getBinanceAssets(serverTime.data.serverTime , findExchange.apiKey , findExchange.secretKey)
-        
-        let jsonData = stringify(data);
-        return res.status(200).json({success : true , data : jsonData})
-      }else if(req.query.name == "Bitpanda pro"){
-        let response = await bitpandaServices.getBitpandaAssets(findExchange.apiKey)
-        return res.status(200).json({success : true , data : response.data})
-      }
+    );
 
-   
-      
+    if (req.query.name == "Binance") {
+      let serverTime = await axios.get(`${process.env.BINANCE_BASE_URL}/api/v3/time`) //GET SERVER TIMESTAMP
 
-    res.status(400).json({ success: true, msg : "No Exchange Found" });
+      let data = await binanceServices.getBinanceAssets(serverTime.data.serverTime, findExchange.apiKey, findExchange.secretKey)
+
+      let jsonData = stringify(data);
+      return res.status(200).json({ success: true, data: jsonData })
+    } else if (req.query.name == "Bitpanda pro") {
+      let response = await bitpandaServices.getBitpandaAssets(findExchange.apiKey)
+      return res.status(200).json({ success: true, data: response.data })
+    } else if (req.query.name == "Poloniex") {
+      let response = await poloniexServices.getPloniexAssets(findExchange.apiKey, findExchange.secretKey)
+
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "Kreken") {
+      let response = await krakenServices.getKrakenAssets(findExchange.apiKey, findExchange.secretKey)
+
+      return res.status(200).json({ success: true, data: response })
+    } else if (req.query.name == "Okex") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey)
+
+      return res.status(200).json({ success: true, data: response })
+    }
+
+
+
+
+    res.status(400).json({ success: true, msg: "No Exchange Found" });
   } catch (err) {
     console.log(
       "🚀 ~ file: user.js ~ line 72 ~ getExchangesDataOfSpecificExchange ~ err",
