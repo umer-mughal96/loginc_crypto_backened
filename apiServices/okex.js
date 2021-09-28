@@ -2,6 +2,8 @@ const { default: axios } = require('axios');
 const crypto = require('crypto');
 const { stringify } = require('flatted');
 
+const CryptoJS = require('crypto-js');
+
 
 const baseUrl = "https://www.okex.com";
 let config ;
@@ -38,7 +40,7 @@ const getOkexAssets = async (okexApiKey, okexSecretKey) => {
             'OK-ACCESS-KEY' : okexApiKey,
             'OK-ACCESS-SIGN' : hashes,
             'OK-ACCESS-TIMESTAMP' : timestamp.epoch,
-            'OK-ACCESS-PASSPHRASE' : 'apikey',
+            'OK-ACCESS-PASSPHRASE' : 'rajaali123',
             'Content-Type' : 'application/json'
         }
     }
@@ -61,9 +63,84 @@ const getUserAssets =async () => {
         
     }
 }
+const placeOkexDirectOrder = async (data, credentials) => {
+
+
+    let timestamp =await  getServerTime();
+    secretKey = credentials.secretKey;
+    console.log(secretKey);
+
+    const sign=CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.iso + 'POST' + '/api/v5/trade/order', secretKey))
+    // console.log(data, credentials);
+    
+
+    
+    // console.log(timestamp);
+    preHashString = timestamp.iso + 'POST' + '/api/v5/trade/order';
+
+
+
+    let hashes = signature(preHashString)
+
+    console.log("This is Okex line 74");
+
+
+
+    const config = {
+        headers : {
+            'OK-ACCESS-KEY' : credentials.apiKey,
+            'OK-ACCESS-SIGN' :  sign,
+            'OK-ACCESS-TIMESTAMP' : timestamp.iso,
+            'OK-ACCESS-PASSPHRASE' : 'rajaali123',
+            'Content-Type' : 'application/json'
+        }
+    }
+    if(data.action == "Buy")
+    {
+        console.log("line 90");
+        try {
+            const result = await axios.post(baseUrl+'/api/v5/trade/order', 
+            {
+                instId : data.coin+"-USDT",
+                tdMode : "cash",
+                side : "buy",
+                ordType : "market",
+                sz : data.amount
+    
+            }, config);
+    
+            
+    
+            console.log(result);
+            return result;
+        } catch (error) {
+            console.log(error);
+        }
+      
+    }
+    else if(data.action == "Sell")
+    {
+        console.log("line 106");
+
+        const result = await axios.post(baseUrl+'/api/v5/trade/order', 
+        {
+            instId : data.coin+"-USDT",
+            tdMode : "cash",
+            side : "sell",
+            ordType : "market",
+            sz : data.amount
+
+        }, config);
+
+        console.log(result);
+        return result;
+    }
+    
+}
 
 
 
 module.exports = {
-    getOkexAssets
+    getOkexAssets,
+    placeOkexDirectOrder
 }

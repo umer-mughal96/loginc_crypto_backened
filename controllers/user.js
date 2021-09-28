@@ -11,6 +11,20 @@ const poloniexServices = require('../apiServices/poloniex')
 const krakenServices = require('../apiServices/kraken')
 const okexServices = require('../apiServices/okex')
 
+const bitstampServices = require('../apiServices/bitstamp')
+
+const coinbaseServices = require('../apiServices/coinbase')
+
+const hitbtcServices = require('../apiServices/hitbtc')
+
+const liquidServices = require('../apiServices/liquid')
+
+const binanceusServices = require('../apiServices/binanceus')
+
+
+
+
+
 //Update User By Id
 
 const stripePayment = async (req, res, next) => {
@@ -67,8 +81,33 @@ const getExchangesDataOfSpecificExchange = async (req, res, next) => {
 
       return res.status(200).json({ success: true, data: response })
     } else if (req.query.name == "Okex") {
-      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey)
-
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "Bitstamp") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "Coinbase") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "HitBTC") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "Liquid") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
+      return res.status(200).json({ success: true, data: response })
+    }
+    else if (req.query.name == "Binance US") {
+      let response = await okexServices.getOkexAssets(findExchange.apiKey, findExchange.secretKey) 
+      
       return res.status(200).json({ success: true, data: response })
     }
 

@@ -21,6 +21,10 @@ const ExchangeSchema = new Schema({
         type: String,
         required: true,
       },
+      passphrase : {
+        type : String, 
+        required : false
+      }
     },
   ],
   createdAt: { type: Date, default: Date.now },

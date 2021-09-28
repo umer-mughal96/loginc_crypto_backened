@@ -9,6 +9,7 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const exchangeRoute = require("./routes/exchanges/exchange");
 const adminRoute = require("./routes/admin/admin");
+const ruleRoute = require("./routes/rule/rule");
 const {
   findUserById,
   findUserBySocketId,
@@ -38,6 +39,13 @@ app.use("/logiccrypto/api/v1/auth", authRoute);
 app.use("/logiccrypto/api/v1/user", userRoute);
 
 app.use("/logiccrypto/api/v1/admin", adminRoute);
+
+app.get('/', (req, res)=>{
+  res.sendStatus(200);
+})
+
+//Rule Routes
+app.use("/logiccrypto/api/v1/rule", ruleRoute);
 
 const server = app.listen(PORT, () => {
   console.log(

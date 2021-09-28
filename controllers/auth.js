@@ -10,6 +10,8 @@ const randomstring = require("randomstring");
 const authServices = require("../services/auth");
 
 
+  
+
 //POST        @REGISTER USER
 //API         @  '/register '
 
@@ -46,6 +48,8 @@ const registerUser = async (req, res, next) => {
       },
     };
 
+    // console.log(payload);
+
     const token = await generateToken(payload, req, res);
 // KJJKL
     // var job = cron.schedule(
@@ -74,7 +78,7 @@ const registerUser = async (req, res, next) => {
     // );
     // await sendEmailToUser();
 
-    res.status(201).json({ success: true, msg: "Successfully registered!" });
+    res.status(201).json({ success: true, msg: "Successfully registered!" , token : token});
     // job.start();
   } catch (err) {
     console.log(err);
