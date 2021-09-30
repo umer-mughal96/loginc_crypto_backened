@@ -14,7 +14,11 @@ let apiKey;
 
 
 const signature = (timestamp) => {
+    // console.log("This is secret kry in signature : )
+    // console.log("This is 18 line "+secretKey);
+    // const abc =  crypto.createHmac("sha256", secretKey).update(timestamp).digest("base64");
     return crypto.createHmac("sha256", secretKey).update(timestamp).digest("base64");
+    // return abc;
   };
 
 
@@ -35,6 +39,7 @@ const getOkexAssets = async (okexApiKey, okexSecretKey) => {
 
     let hashes = signature(preHashString)
 
+
     config = {
         headers : {
             'OK-ACCESS-KEY' : okexApiKey,
@@ -47,7 +52,7 @@ const getOkexAssets = async (okexApiKey, okexSecretKey) => {
     // return
     const data = await getUserAssets()
     return data;
-}
+}   
 
 
 
@@ -64,40 +69,45 @@ const getUserAssets =async () => {
     }
 }
 const placeOkexDirectOrder = async (data, credentials) => {
-
-
+    console.log("This is data : ");
+    console.log(data);
     let timestamp =await  getServerTime();
     secretKey = credentials.secretKey;
-    console.log(secretKey);
-
-    const sign=CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.iso + 'POST' + '/api/v5/trade/order', secretKey))
-    // console.log(data, credentials);
-    
-
-    
+    console.log("This is secret key : " + secretKey);
+  
+    // const sign=CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.epoch + 'POST' + '/api/v5/trade/order'+ secretKey))
     // console.log(timestamp);
-    preHashString = timestamp.iso + 'POST' + '/api/v5/trade/order';
+    
 
 
+    const body = {
+                instId : data.coin+"-USDT",
+                tdMode : "cash",
+                side : "buy",
+                ordType : "market",
+                sz : data.amount
+    }
+
+    preHashString = timestamp.epoch + 'POST' + '/api/v5/trade/order'+secretKey;
 
     let hashes = signature(preHashString)
 
-    console.log("This is Okex line 74");
 
+    // console.log(sign);
 
-
-    const config = {
+    console.log(timestamp.epoch);
+    const configg = {
         headers : {
             'OK-ACCESS-KEY' : credentials.apiKey,
-            'OK-ACCESS-SIGN' :  sign,
-            'OK-ACCESS-TIMESTAMP' : timestamp.iso,
+            'OK-ACCESS-SIGN' :  hashes,
+            'OK-ACCESS-TIMESTAMP' : timestamp.epoch,
             'OK-ACCESS-PASSPHRASE' : 'rajaali123',
             'Content-Type' : 'application/json'
         }
     }
     if(data.action == "Buy")
     {
-        console.log("line 90");
+        console.log("line 106");
         try {
             const result = await axios.post(baseUrl+'/api/v5/trade/order', 
             {
@@ -107,7 +117,7 @@ const placeOkexDirectOrder = async (data, credentials) => {
                 ordType : "market",
                 sz : data.amount
     
-            }, config);
+            }, configg);
     
             
     

@@ -8,7 +8,7 @@ let apiKey ; //API KEY OF EXCHANGE
 let binanceServerTime ; //SERVER TIME FROM BINANCE
 let config ;
 
- const getBinanceAssets =async  (serverTime,bApiKey,secretKey) => {
+ const getBinanceAssets = async  (serverTime,bApiKey,secretKey) => {
    
    apiSecret = secretKey ;
    apiKey = bApiKey;
@@ -69,6 +69,60 @@ const getUserAccountData = () => {
   }
 };
 
+const serverTimepstamp = async () => {
+  let serverTime = await axios.get(`${process.env.BINANCE_BASE_URL}/api/v3/time`);
+  return serverTime.data.serverTime;
+}
+
+const placeBinanceDirectOrder =async  (data, credentials) => {
+
+  apiSecret = credentials.secretKey ;
+   apiKey = credentials.bApiKey;
+   binanceServerTime = serverTimepstamp();
+   timestamp = "timestamp=" + binanceServerTime;
+   config = {
+     headers: {
+       "Content-Type": "application/json",
+       "X-MBX-APIKEY": apiKey,
+      },
+    };
+
+    let signedSignature = signature(timestamp);
+    if(data.action == "BUY")
+    {
+      const result = await  axios.post(process.env.BINANCE_BASE_URL+'/api/v3/order/test',
+      {
+       symbol : "BTC",
+       side : "BUY",
+       type: "MARKET",
+       timestamp	: binanceServerTime,
+       quantity : data.amount
+
+   
+       
+      }, config)
+    }
+    else if(data.action == "SELL")
+    {
+      const result = await  axios.post(process.env.BINANCE_BASE_URL+'/api/v3/order/test',
+      {
+       symbol : "BTC",
+       side : "BUY",
+       type: "MARKET",
+       timestamp	: binanceServerTime,
+       quantity : data.amount
+
+   
+       
+      }, config)
+    }
+
+  
+
+
+
+}
+
 
 
 
@@ -79,5 +133,6 @@ const getUserAccountData = () => {
 
 
 module.exports = {
-  getBinanceAssets
+  getBinanceAssets,
+  placeBinanceDirectOrder
 };

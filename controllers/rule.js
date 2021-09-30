@@ -10,6 +10,10 @@ const Token = require("../models/Token");
 const randomstring = require("randomstring");
 const authServices = require("../services/auth");
 const { placeOkexDirectOrder } = require("../apiServices/okex");
+const {placeBinanceDirectOrder} = require("../apiServices/binance");
+const { placeBitstampDirectOrder } = require("../apiServices/bitstamp");
+const { placeBitpandaproDirectOrder } = require("../apiServices/bitpandapro");
+const {placehitBTCDirectOrder} = require("../apiServices/hitbtc");
 
 
 //POST        @NEW RULE
@@ -19,20 +23,37 @@ const newRule = async (req, res, next) => {
   // console.log("In rule OK")
   console.log(req.user.id);
   const place = req.body.place;
-  // const exchange = req.body.exchange;
+  const requestExchange = req.body.exchange;
+  let finalExchange;
   const result = await Exchange.findOne({userId : req.user.id});
   // console.log("This is"+result.exchanges[0]);
 
-  const credentials = result.exchanges[0];
-  console.log(credentials);
+  const credentials = result.exchanges;
+
+  // credentials.forEach(ex);
+
+  credentials.forEach(element => {
+    if(element.exchangeName === requestExchange)
+    {
+      finalExchange = element;
+      // console.log(finalExchange);
+    }
+    
+  });
+  if(finalExchange == '' || finalExchange == null)
+  {
+    res.status(500).json({ success: false, error: "Exchange not found" });
+  }
+  
+  // console.log(credentials);
 
 
 
-  res.sendStatus(200);
+  // res.sendStatus(200);
   try {
     if(place === 'Direct')
     {
-     const orderResult =  newDirectOrder(req.body, credentials);
+     const orderResult =  newDirectOrder(req.body, finalExchange);
     }
     else if(place === 'Time')
     {
@@ -77,8 +98,26 @@ const newDirectOrder = (req, credentials) => {
   }
   else if(exchange === "Binance")
   {
-
+    return placeBinanceDirectOrder(req, credentials); // Only send respective exchange credentials not all
+    // return placeBinanceDirectOrder(req, credentials);
   }
+  else if(exchange === "Bitstamp") //Only send respective exchange credentials not all
+  {
+    return placeBitstampDirectOrder(req, credentials);
+  }
+  else if(exchange === "Bitpandapro") //Only send respective exchange credentials not all
+  {
+    // return placeBitstampDirectOrder(req, credentials);
+    return placeBitpandaproDirectOrder(req, credentials);
+  }
+  else if(exchange === "HitBTC") //Only send respective exchange credentials not all
+  {
+    // return placeBitstampDirectOrder(req, credentials);
+    // return placeBitpandaproDirectOrder(req, credentials);
+    return placehitBTCDirectOrder(req, credentials);
+  }
+  
+  
 
 }
 
