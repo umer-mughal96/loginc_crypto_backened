@@ -14,6 +14,7 @@ const {placeBinanceDirectOrder} = require("../apiServices/binance");
 const { placeBitstampDirectOrder } = require("../apiServices/bitstamp");
 const { placeBitpandaproDirectOrder } = require("../apiServices/bitpandapro");
 const {placehitBTCDirectOrder} = require("../apiServices/hitbtc");
+const {placeCoinbaseDirectOrder} = require("../apiServices/coinbase");
 
 
 //POST        @NEW RULE
@@ -110,11 +111,14 @@ const newDirectOrder = (req, credentials) => {
     // return placeBitstampDirectOrder(req, credentials);
     return placeBitpandaproDirectOrder(req, credentials);
   }
-  else if(exchange === "HitBTC") //Only send respective exchange credentials not all
+  else if(exchange === "HitBTC")
   {
-    // return placeBitstampDirectOrder(req, credentials);
-    // return placeBitpandaproDirectOrder(req, credentials);
+    
     return placehitBTCDirectOrder(req, credentials);
+  }
+  else if(exchange === "Coinbase")
+  {
+    return placeCoinbaseDirectOrder(req, credentials);
   }
   
   
