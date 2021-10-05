@@ -8,15 +8,18 @@ const authenticated = async (req, res, next) => {
 
   try {
     // const newToken = token.split(" ")[1]; This is incorrect. It returns Undefined value
-    // console.log(newToken);
+    // console.log("This is token : "+token);
 
     const decoded = await jwt.decode(token, process.env.JWT_SECRET);
     // console.log("In Middleware");
+
+    // console.log(decoded);
     req.user = decoded.user;
 
     // console.log("In Middleware 2");
     next();
   } catch (err) {
+    console.log(err);
     res.status(500).json({ success: false, error: err.message });
   }
 };

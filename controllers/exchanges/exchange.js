@@ -22,7 +22,7 @@ const connectExchange = async (req, res, next) => {
         msg: "Bad Request",
       });
     }
-
+    console.log("This is new");
     const exchange = await getExchange(req.user.id);
     const findExchangeWithSameName =
       exchange &&
@@ -80,6 +80,7 @@ const connectExchange = async (req, res, next) => {
 };
 
 const getExchanges = async (req, res, next) => {
+  console.log("get exchanges called")
   try {
     const exchanges = await getExchange(req.user.id);
     return res.status(200).json({ success: true, exchanges });

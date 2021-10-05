@@ -56,37 +56,37 @@ const placeKrakenDirectOrder = async (data, credentials) => {
         volume : data.amount
     }
 
-   const result =  await kraken.api('AddOrder', {bb});   ///0/private/
+//    const result =  await kraken.api('AddOrder', {bb});   ///0/private/
 
    console.log(result)
     
 
-    // console.log(body);
+    console.log(body);
 
-    // const signature = getMessageSignature('/0/private/AddOrder', body, credentials.secretKey, time);
+    const signature = getMessageSignature('/0/private/AddOrder', body, credentials.secretKey, time);
     
 
-    // console.log(signature);
-    // const config = {
-    //     headers : {
-    //         'API-Key' : credentials.apiKey,
-    //         'API-Sign': signature,
-    //         'content-type' : 'application/x-www-form-urlencoded'
-    //     }
-    // }
+    console.log(signature);
+    const config = {
+        headers : {
+            'API-Key' : credentials.apiKey,
+            'API-Sign': signature,
+            'content-type' : 'application/x-www-form-urlencoded'
+        }
+    }
 
-    // await axios.post(process.env.KRAKEN_BASE_URL+'/0/private/AddOrder',{bb}, config)
-    // .then((error, response)=>{
-    //     if(response) console.log(response);
-    //     else console.log(error);
-    // })
-    // .catch((error)=>{
-    //      console.log(error);
-    // })
+    await axios.post(process.env.KRAKEN_BASE_URL+'/0/private/AddOrder',{bb}, config)
+    .then((error, response)=>{
+        if(response) console.log(response);
+        else console.log(error);
+    })
+    .catch((error)=>{
+         console.log(error);
+    })
 
 
 
-    // return signature;
+    return signature;
 
 
         

@@ -44,6 +44,7 @@ const newRule = async (req, res, next) => {
     {
       finalExchange = element;
       // console.log(finalExchange);
+      console.log(finalExchange);
     }
     
   });
@@ -60,7 +61,14 @@ const newRule = async (req, res, next) => {
   try {
     if(place === 'Direct')
     {
-     const orderResult =  newDirectOrder(req.body, finalExchange);
+      // console.log(finalExchange);
+     const result =  newDirectOrder(req.body, finalExchange);
+     console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
+     
+     res.json({
+       abc : result
+     });
+
     }
     else if(place === 'Time')
     {
@@ -95,9 +103,10 @@ const newRule = async (req, res, next) => {
   // }
 };
 
-const newDirectOrder = (req, credentials) => {
+const newDirectOrder =async (req, credentials) => {
   const exchange = req.exchange;
-  console.log(credentials, exchange);
+  // console.log("Exchange data: ||>")
+  // console.log(credentials, exchange);
   if(exchange == "Okex")
   {
     console.log("In new Direct order okex");
@@ -112,10 +121,14 @@ const newDirectOrder = (req, credentials) => {
   {
     return placeBitstampDirectOrder(req, credentials);
   }
-  else if(exchange === "Bitpandapro") //Only send respective exchange credentials not all
+  else if(exchange === "Bitpanda pro") //Only send respective exchange credentials not all
   {
     // return placeBitstampDirectOrder(req, credentials);
-    return placeBitpandaproDirectOrder(req, credentials);
+  //  return placeBitpandaproDirectOrder(req, credentials);
+  console.log("Its me Bitpanda Pro")
+   const res = await placeBitpandaproDirectOrder(req, credentials)
+   console.log("🚀 ~ file: rule.js ~ line 128 ~ newDirectOrder ~ res", res)
+   return res.error
   }
   else if(exchange === "HitBTC")
   {
