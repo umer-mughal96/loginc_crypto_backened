@@ -76,8 +76,10 @@ const serverTimepstamp = async () => {
 
 const placeBinanceDirectOrder =async  (data, credentials) => {
 
+  console.log("In Binance");
+
   apiSecret = credentials.secretKey ;
-   apiKey = credentials.bApiKey;
+   apiKey = credentials.apiKey;
    binanceServerTime = serverTimepstamp();
    timestamp = "timestamp=" + binanceServerTime;
    config = {
@@ -88,7 +90,7 @@ const placeBinanceDirectOrder =async  (data, credentials) => {
     };
 
     let signedSignature = signature(timestamp);
-    if(data.action == "BUY")
+    if(data.action == "Buy")
     {
       const result = await  axios.post(process.env.BINANCE_BASE_URL+'/api/v3/order/test',
       {
@@ -100,7 +102,8 @@ const placeBinanceDirectOrder =async  (data, credentials) => {
 
    
        
-      }, config)
+      }, config);
+      console.log(result);
     }
     else if(data.action == "SELL")
     {
@@ -114,8 +117,11 @@ const placeBinanceDirectOrder =async  (data, credentials) => {
 
    
        
-      }, config)
+      }, config);
+      console.log(result);
     }
+
+
 
   
 

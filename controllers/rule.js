@@ -16,6 +16,12 @@ const { placeBitpandaproDirectOrder } = require("../apiServices/bitpandapro");
 const {placehitBTCDirectOrder} = require("../apiServices/hitbtc");
 const {placeCoinbaseDirectOrder} = require("../apiServices/coinbase");
 
+const {placePoloniexDirectOrder} = require("../apiServices/poloniex");
+
+const {placeBinanceusDirectOrder} = require("../apiServices/binanceus");
+const { placeLiquidDirectOrder } = require("../apiServices/liquid");
+const {placeKrakenDirectOrder} = require("../apiServices/kraken");
+
 
 //POST        @NEW RULE
 //API         @  '/new '
@@ -41,7 +47,7 @@ const newRule = async (req, res, next) => {
     }
     
   });
-  if(finalExchange == '' || finalExchange == null)
+  if(finalExchange == '' || finalExchange == null || finalExchange == undefined)
   {
     res.status(500).json({ success: false, error: "Exchange not found" });
   }
@@ -91,7 +97,7 @@ const newRule = async (req, res, next) => {
 
 const newDirectOrder = (req, credentials) => {
   const exchange = req.exchange;
-  // console.log(credentials, exchange);
+  console.log(credentials, exchange);
   if(exchange == "Okex")
   {
     console.log("In new Direct order okex");
@@ -119,6 +125,22 @@ const newDirectOrder = (req, credentials) => {
   else if(exchange === "Coinbase")
   {
     return placeCoinbaseDirectOrder(req, credentials);
+  }
+  else if(exchange === "Poloniex")
+  {
+    return placePoloniexDirectOrder(req, credentials); //placePoloniexDirectOrder
+  }
+  else if(exchange === "Binanceus") //for binanceus
+  {
+    return placeBinanceusDirectOrder(req, credentials);
+  }
+  else if(exchange === "Liquid")
+  {
+    return placeLiquidDirectOrder(req, credentials);
+  }
+  else if(exchange === "Kraken")
+  {
+    return placeKrakenDirectOrder(req, credentials);
   }
   
   
