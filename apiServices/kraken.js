@@ -58,12 +58,12 @@ const placeKrakenDirectOrder = async (data, credentials) => {
 
 //    const result =  await kraken.api('AddOrder', {bb});   ///0/private/
 
-   console.log(result)
+//    console.log(result)
     
 
-    console.log(body);
+    // console.log(body);
 
-    const signature = getMessageSignature('/0/private/AddOrder', body, credentials.secretKey, time);
+    const signature = getMessageSignature('/0/private/AddOrder', bb, credentials.secretKey, time);
     
 
     console.log(signature);
@@ -86,7 +86,7 @@ const placeKrakenDirectOrder = async (data, credentials) => {
 
 
 
-    return signature;
+    // return signature;
 
 
         

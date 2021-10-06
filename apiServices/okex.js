@@ -13,11 +13,11 @@ let apiKey;
 
 
 
-const signature = (timestamp) => {
+const signature = (prehash) => {
     // console.log("This is secret kry in signature : )
     // console.log("This is 18 line "+secretKey);
     // const abc =  crypto.createHmac("sha256", secretKey).update(timestamp).digest("base64");
-    return crypto.createHmac("sha256", secretKey).update(timestamp).digest("base64");
+    return crypto.createHmac("sha256", secretKey).update(prehash).digest("base64");
     // return abc;
   };
 
@@ -45,7 +45,7 @@ const getOkexAssets = async (okexApiKey, okexSecretKey) => {
             'OK-ACCESS-KEY' : okexApiKey,
             'OK-ACCESS-SIGN' : hashes,
             'OK-ACCESS-TIMESTAMP' : timestamp.epoch,
-            'OK-ACCESS-PASSPHRASE' : 'rajaali123',
+            'OK-ACCESS-PASSPHRASE' : 'Rajaali123',
             'Content-Type' : 'application/json'
         }
     }
@@ -69,60 +69,68 @@ const getUserAssets =async () => {
     }
 }
 const placeOkexDirectOrder = async (data, credentials) => {
-    console.log("This is data : ");
-    console.log(data);
+    // console.log("This is data : ");
+    // console.log(data);
     let timestamp =await  getServerTime();
     secretKey = credentials.secretKey;
     console.log("This is secret key : " + secretKey);
+    apiKey = credentials.apiKey;
+    // console.log(timestamp.epoch);
   
     // const sign=CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp.epoch + 'POST' + '/api/v5/trade/order'+ secretKey))
     // console.log(timestamp);
+
+    // const asign=await CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256(timestamp + 'POST' + '/api/v5/trade/order', secretKey))
     
 
 
     const body = {
-                instId : data.coin+"-USDT",
-                tdMode : "cash",
-                side : "buy",
-                ordType : "market",
-                sz : data.amount
+                "instId" : data.coin+"-USDT",
+                "tdMode" : "cash",
+                "side" : data.action.toLowerCase(),
+                "ordType" : "market",
+                "sz" : data.amount
     }
 
-    preHashString = timestamp.epoch + 'POST' + '/api/v5/trade/order'+secretKey;
+   const ppreHashString = timestamp.iso+'POST'+'/api/v5/trade/order'+JSON.stringify(body);
 
-    let hashes = signature(preHashString)
+
+
+
+
+   
+//    console.log("🚀 ~ file: okex.js ~ line 96 ~ placeOkexDirectOrder ~ ppreHashString", ppreHashString)
+
+    const hashes = signature(ppreHashString)
+    console.log("🚀 ~ file: okex.js ~ line 106 ~ placeOkexDirectOrder ~ hashes", hashes)
 
 
     // console.log(sign);
 
-    console.log(timestamp.epoch);
+    // console.log(timestamp);
+    // console.log("🚀 ~ file: okex.js ~ line 103 ~ placeOkexDirectOrder ~ timestamp", timestamp)
     const configg = {
         headers : {
             'OK-ACCESS-KEY' : credentials.apiKey,
             'OK-ACCESS-SIGN' :  hashes,
-            'OK-ACCESS-TIMESTAMP' : timestamp.epoch,
-            'OK-ACCESS-PASSPHRASE' : 'rajaali123',
+            'OK-ACCESS-TIMESTAMP' : timestamp.iso,
+            'OK-ACCESS-PASSPHRASE' : 'Rajaali123',
             'Content-Type' : 'application/json'
         }
     }
     if(data.action == "Buy")
     {
-        console.log("line 106");
+        // console.log("line 106");
         try {
             const result = await axios.post(baseUrl+'/api/v5/trade/order', 
-            {
-                instId : data.coin+"-USDT",
-                tdMode : "cash",
-                side : "buy",
-                ordType : "market",
-                sz : data.amount
-    
-            }, configg);
+            
+               body
+            , configg);
     
             
     
-            console.log(result);
-            return result;
+            // console.log(result.data.data);
+             return result.data.data;
         } catch (error) {
             console.log(error);
         }
@@ -133,17 +141,10 @@ const placeOkexDirectOrder = async (data, credentials) => {
         console.log("line 106");
 
         const result = await axios.post(baseUrl+'/api/v5/trade/order', 
-        {
-            instId : data.coin+"-USDT",
-            tdMode : "cash",
-            side : "sell",
-            ordType : "market",
-            sz : data.amount
+        body, configg);
 
-        }, config);
-
-        console.log(result);
-        return result;
+        console.log(result.data);
+        return result.data;
     }
     
 }

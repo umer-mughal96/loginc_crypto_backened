@@ -36,14 +36,19 @@ buy(currencyPair, rate, amount, fillOrKill, immediateOrCancel, postOnly [, callb
 sell(currencyPair, rate, amount, fillOrKill, immediateOrCancel, postOnly [, callback])
 
 */
-
+    
     const poloniex = await getInstance(credentials);
+    // console.log("🚀 ~ file: poloniex.js ~ line 41 ~ placePoloniexDirectOrder ~ poloniex", poloniex)
     try 
     {
         if(data.action == "Buy")
         {
-        const transact =  poloniex.buy('USDT_'+data.coin,'1', data.amount );
-        console.log(transact);
+            console.log("In Buy action")
+        const transact = await poloniex.buy('USDT_'+data.coin,'1', data.amount );
+
+        console.log("After api execution");
+        console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ transact", transact)
+        // console.log(transact);
 
         }
         else if(data.action == "Sell")

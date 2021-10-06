@@ -131,17 +131,23 @@ const placeBitpandaproDirectOrder = async (data, credentials) => { // eyJvcmciOi
             'Authorization':'Bearer '+credentials.apiKey
             };
 
-            fetch('https://api.exchange.bitpanda.com/public/v1/account/orders',
+           return fetch('https://api.exchange.bitpanda.com/public/v1/account/orders',
             {
             method: 'POST',
             body: JSON.stringify(inputBody),
             headers: headers
             })
-            .then((error, response)=>{
-                console.log(response);
-            }).then(function(body) {
-            console.log(body);
-            });
+            .then(async function(res){
+                // console.log("🚀 ~ file: bitpandapro.js ~ line 72 ~ .then ~ res", ))
+                const ressss = await res.json()
+                console.log("🚀 ~ file: bitpandapro.js ~ line 74 ~ .then ~ ressss", ressss)
+                    
+                   return ressss
+                }).then(function(body) {
+                console.log("🚀 ~ file: bitpandapro.js ~ line 76 ~ .then ~ body", body)
+                return body
+                // console.log(body);
+                });
       }
     //   console.log(result);
     //   return result;

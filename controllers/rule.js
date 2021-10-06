@@ -62,11 +62,11 @@ const newRule = async (req, res, next) => {
     if(place === 'Direct')
     {
       // console.log(finalExchange);
-     const result =  newDirectOrder(req.body, finalExchange);
+     const result = await newDirectOrder(req.body, finalExchange);
      console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
      
      res.json({
-       abc : result
+       status : result
      });
 
     }
@@ -129,11 +129,16 @@ const newDirectOrder =async (req, credentials) => {
    const res = await placeBitpandaproDirectOrder(req, credentials)
    console.log("🚀 ~ file: rule.js ~ line 128 ~ newDirectOrder ~ res", res)
    return res.error
+   
   }
   else if(exchange === "HitBTC")
   {
     
-    return placehitBTCDirectOrder(req, credentials);
+      const res = await placehitBTCDirectOrder(req, credentials);
+      console.log("🚀 ~ file: rule.js ~ line 138 ~ newDirectOrder ~ res", res);
+
+      return res;
+      
   }
   else if(exchange === "Coinbase")
   {

@@ -42,15 +42,16 @@ const placehitBTCDirectOrder = async (data, credentials) => { // eyJvcmciOiJiaXR
 
       if(data.action == "Buy")
       {
+        console.log(data.amount);
 
 
         //orderData = {'symbol':'ETHBTC', 'side': 'sell', 'quantity': '0.063', 'price': '0.046016' }
                 
                 const inputBody = {
-                "symbol": data.coin+"USD",
-                "side": "BUY",
+                "symbol": data.coin+"BTC",
+                "side": "buy",
                 "type": "market",
-                "amount": data.amount
+                "quantity": data.amount
                 };
                 const headers = {
                 'Content-Type':'application/json',
@@ -58,7 +59,7 @@ const placehitBTCDirectOrder = async (data, credentials) => { // eyJvcmciOiJiaXR
                 'Authorization':'Basic '+auth
                 };
 
-                fetch('https://api.hitbtc.com/api/3/spot/order',
+               return fetch('https://api.hitbtc.com/api/3/spot/order',
                 {
                 method: 'POST',
                 body: JSON.stringify(inputBody),
@@ -67,7 +68,7 @@ const placehitBTCDirectOrder = async (data, credentials) => { // eyJvcmciOiJiaXR
                 .then(function(res) {
                 return res.json();
                 }).then(function(body) {
-                console.log(body);
+                return body;
                 });
         ////////////////////////////////////////////////////////////////////////////////////////////////// Axios request
         // const inputBody = {
@@ -109,28 +110,28 @@ const placehitBTCDirectOrder = async (data, credentials) => { // eyJvcmciOiJiaXR
       else if(data.action == "Sell")
       {
         const inputBody = {
-            "instrument_code": data.coin+"_EUR",
-            "side": "SELL",
-            "type": "MARKET",
-            "amount": data.amount
+          "symbol": data.coin+"BTC",
+          "side": "buy",
+          "type": "market",
+          "quantity": data.amount
             };
             const headers = {
             'Content-Type':'application/json',
             'Accept':'application/json',
-            'Authorization':'Bearer '+credentials.apiKey
+            'Authorization':'Basic '+auth
             };
 
-            fetch('https://api.exchange.bitpanda.com/public/v1/account/orders',
+            return fetch('https://api.hitbtc.com/api/3/spot/order',
             {
             method: 'POST',
             body: JSON.stringify(inputBody),
             headers: headers
             })
             .then(function(res) {
-            return res.json();
-            }).then(function(body) {
-            console.log(body);
-            });
+              return res.json();
+              }).then(function(body) {
+              return body;
+              });
       }
 
       
