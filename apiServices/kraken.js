@@ -49,40 +49,41 @@ const placeKrakenDirectOrder = async (data, credentials) => {
     const time = Date.now();
     // const body = 'nonce='+time+'&pair='+data.coin+'USD&ordertype=market&type='+data.action+'&volume='+data.amount;
     const bb= {
-        nonce : time, 
+        nonce : time.epoch, 
         pair: data.coin+'USD',
         ordertype : 'market',
-        type: data.action,
-        volume : data.amount
+        type: data.action.toLowerCase(),
+        volume : '0.5'
     }
 
-//    const result =  await kraken.api('AddOrder', {bb});   ///0/private/
+   const result =  await kraken.api('AddOrder', bb);   ///0/private/
+   console.log("🚀 ~ file: kraken.js ~ line 60 ~ placeKrakenDirectOrder ~ result", result)
 
 //    console.log(result)
     
 
     // console.log(body);
 
-    const signature = getMessageSignature('/0/private/AddOrder', bb, credentials.secretKey, time);
+    // const signature = getMessageSignature('/0/private/AddOrder', bb, credentials.secretKey, time);
     
 
-    console.log(signature);
-    const config = {
-        headers : {
-            'API-Key' : credentials.apiKey,
-            'API-Sign': signature,
-            'content-type' : 'application/x-www-form-urlencoded'
-        }
-    }
+    // console.log(signature);
+    // const config = {
+    //     headers : {
+    //         'API-Key' : credentials.apiKey,
+    //         'API-Sign': signature,
+    //         'content-type' : 'application/x-www-form-urlencoded'
+    //     }
+    // }
 
-    await axios.post(process.env.KRAKEN_BASE_URL+'/0/private/AddOrder',{bb}, config)
-    .then((error, response)=>{
-        if(response) console.log(response);
-        else console.log(error);
-    })
-    .catch((error)=>{
-         console.log(error);
-    })
+    // await axios.post(process.env.KRAKEN_BASE_URL+'/0/private/AddOrder',{bb}, config)
+    // .then((error, response)=>{
+    //     if(response) console.log(response);
+    //     else console.log(error);
+    // })
+    // .catch((error)=>{
+    //      console.log(error);
+    // })
 
 
 

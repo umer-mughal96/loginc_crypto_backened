@@ -1,5 +1,10 @@
-const { Transaction } = require('coinbase');
+// const { Transaction } = require('coinbase');
 const Poloniex = require('poloniex-api-node');
+
+// import {  AuthenticatedClient }   from "poloniex-node-api";
+// const auth = require('poloniex-node-api')
+// console.log("🚀 ~ file: poloniex.js ~ line 6 ~ auth", auth)
+
 
 
 
@@ -37,24 +42,50 @@ sell(currencyPair, rate, amount, fillOrKill, immediateOrCancel, postOnly [, call
 
 */
     
-    const poloniex = await getInstance(credentials);
+    // const poloniex = await getInstance(credentials);
+    const ppoloniex = new Poloniex(credentials.apiKey, credentials.secretKey);
+    console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ credentials.secretKey", credentials.secretKey)
+    console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ credentials.apiKey", credentials.apiKey)
+    // console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ ppoloniex", ppoloniex)
+    const key = credentials.apiKey;
+    const secret  = credentials.secretKey;
+    // const client = new AuthenticatedClient({ key, secret });
     // console.log("🚀 ~ file: poloniex.js ~ line 41 ~ placePoloniexDirectOrder ~ poloniex", poloniex)
     try 
     {
         if(data.action == "Buy")
         {
-            console.log("In Buy action")
-        const transact = await poloniex.buy('USDT_'+data.coin,'1', data.amount );
 
-        console.log("After api execution");
-        console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ transact", transact)
-        // console.log(transact);
+
+            
+            console.log("🚀 ~ file: poloniex.js ~ line 60 ~ placePoloniexDirectOrder ~ transact")
+        //     console.log("In Buy action")
+        return ppoloniex.buy('USDT_'+data.coin,'1', data.amount ).then((error, res) => {
+            if(error) console.log(error);
+            else if(res) console.log(res);
+            return res;
+            
+         }).catch((err) => {
+         return err;
+             
+         })
+
+        // console.log("After api execution");
+        // console.log("🚀 ~ file: poloniex.js ~ line 47 ~ placePoloniexDirectOrder ~ transact", transact)
+        // return transact;
 
         }
         else if(data.action == "Sell")
         {
-            const transact =  poloniex.sell('USDT_'+data.coin,'1', data.amount );
-        console.log(transact);
+            return ppoloniex.sell('USDT_'+data.coin,'1', data.amount ).then((error, res) => {
+                if(error) console.log(error);
+                else if(res) console.log(res);
+                return res;
+                
+             }).catch((err) => {
+             return err;
+                 
+             })
         }
         
     } catch (error) {

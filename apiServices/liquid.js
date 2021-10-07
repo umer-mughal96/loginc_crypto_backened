@@ -2,63 +2,50 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
 const placeLiquidDirectOrder = async (data, credentials) => {
+// console.log("🚀 ~ file: liquid.js ~ line 5 ~ placeLiquidDirectOrder ~ credentials", credentials)
     
-  const  token_id = '2291124'
-const user_secret = 'ieGpXraVhVwyyrVSzwge8J8u74WysDiUqP7uzkTr+bpr5+Kg2/BtaG6yK23kbP7Z0jHh0gcQldFEk+igbvJ60A==';
-const path = '/orders';
+  const  ttoken_id = credentials.apiKey;
+const user_secret = credentials.secretKey;
+const ppath = '/orders';
 
-
+const non = Date.now();
+// console.log("🚀 ~ file: liquid.js ~ line 11 ~ placeLiquidDirectOrder ~ non", non)
 const auth_payload = {
-    path : path,
-    nonce : Date.now(),
-    token_id : token_id
+    path : ppath,
+    nonce : non,
+    token_id : ttoken_id
 }
 console.log(auth_payload);
 
-const signature = await jwt.sign(auth_payload, user_secret, { algorithm: 'HS256'}); //, 'HS256'
+// const signature =  jwt.sign(auth_payload, user_secret); //, { algorithm: 'HS256'}
+
+const signature = jwt.sign(auth_payload, user_secret)
+// console.log("🚀 ~ file: liquid.js ~ line 19 ~ placeLiquidDirectOrder ~ signature", signature)
 
 
 const config = {
     headers : {
-        'X-Quoine-Auth' : signature
+        'X-Quoine-Auth' : signature,
+        'Content-Type' : 'application/json',
+        
     }
 }
-/*
+const url = process.env.LIQUID_BASE_URL+'/orders';
+// console.log("🚀 ~ file: liquid.js ~ line 33 ~ placeLiquidDirectOrder ~ url", url)
 
-order_type
-REQUIRED
-string
-Supported values: limit, market, market_with_range, trailing_stop, limit_post_only, stop
-product_id
-REQUIRED
-number
-For BTCUSD product ID is 1.
-side
-REQUIRED
-string
-Supported values: buy or sell.
-quantity
-REQUIRED
-string
-The quantity to buy or sell.
-price
-REQUIRED
-string
-Price per unit of crypto. Only required if order_type is limit, limit_post_only, market_with_range, stop.
-
-
-*/
-
-
-
-await axios.post(process.env.LIQUID_BASE_URL+'/orders', {
+const bb = {
     order_type : "market",
     product_id : 1,
     side : "buy",
     quantity : "1"
-}, config)
+}
+
+
+
+
+ axios.post(url, bb, config)
 .then((error, response)=>{
-    if(response) console.log(response);
+    if(response) console.log(response.response);
     else console.log(error);
 })
 .catch((error)=> {

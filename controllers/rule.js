@@ -63,7 +63,7 @@ const newRule = async (req, res, next) => {
     {
       // console.log(finalExchange);
      const result = await newDirectOrder(req.body, finalExchange);
-     console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
+    //  console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
      
      res.json({
        status : result
@@ -142,11 +142,15 @@ const newDirectOrder =async (req, credentials) => {
   }
   else if(exchange === "Coinbase")
   {
-    return placeCoinbaseDirectOrder(req, credentials);
+    const res = placeCoinbaseDirectOrder(req, credentials);
+
   }
   else if(exchange === "Poloniex")
   {
-    return placePoloniexDirectOrder(req, credentials); //placePoloniexDirectOrder
+    const res = await placePoloniexDirectOrder(req, credentials); //placePoloniexDirectOrder
+    console.log("🚀 ~ file: rule.js ~ line 151 ~ newDirectOrder ~ res", res)
+    return res;
+    
   }
   else if(exchange === "Binanceus") //for binanceus
   {
