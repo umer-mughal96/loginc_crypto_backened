@@ -111,6 +111,8 @@ const newDirectOrder =async (req, credentials) => {
   {
     console.log("In new Direct order okex");
     const res = await placeOkexDirectOrder(req, credentials);
+    console.log("🚀 ~ file: rule.js ~ line 114 ~ newDirectOrder ~ res", res)
+    
     const msg = res.data;
     // console.log("🚀 ~ file: rule.js ~ line 115 ~ newDirectOrder ~ msg", msg)
     
