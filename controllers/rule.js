@@ -63,10 +63,10 @@ const newRule = async (req, res, next) => {
     {
       // console.log(finalExchange);
      const result = await newDirectOrder(req.body, finalExchange);
-    //  console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
-     
+     console.log("🚀 ~ file: rule.js ~ line 66 ~ newRule ~ result", result)
+     console.log(result)
      res.json({
-       status : result
+      result
      });
 
     }
@@ -110,12 +110,41 @@ const newDirectOrder =async (req, credentials) => {
   if(exchange == "Okex")
   {
     console.log("In new Direct order okex");
-    return placeOkexDirectOrder(req, credentials);
+    const res = await placeOkexDirectOrder(req, credentials);
+    const msg = res.data;
+    // console.log("🚀 ~ file: rule.js ~ line 115 ~ newDirectOrder ~ msg", msg)
+    
+    if(res.code == "0")
+    {
+      const abb = {
+        success : true,
+        error : false,
+        msg : msg[0].sMsg 
+      }
+      // console.log("🚀 ~ file: rule.js ~ line 122 ~ newDirectOrder ~ abb", abb)
+      
+      return abb;
+    }
+    else if(res.code == "1")
+    {
+      const abb= {
+        success : false,
+        error : true,
+        msg : msg[0].sMsg 
+      }
+      // console.log("🚀 ~ file: rule.js ~ line 133 ~ newDirectOrder ~ abb", abb)
+      return abb;
+    }
+    
+
+
+
   }
   else if(exchange === "Binance")
   {
-    return placeBinanceDirectOrder(req, credentials); // Only send respective exchange credentials not all
-    // return placeBinanceDirectOrder(req, credentials);
+    const res = await  placeBinanceDirectOrder(req, credentials); // Only send respective exchange credentials not all
+    console.log("🚀 ~ file: rule.js ~ line 146 ~ newDirectOrder ~ res", res)
+        
   }
   else if(exchange === "Bitstamp") //Only send respective exchange credentials not all
   {
@@ -128,6 +157,23 @@ const newDirectOrder =async (req, credentials) => {
   console.log("Its me Bitpanda Pro")
    const res = await placeBitpandaproDirectOrder(req, credentials)
    console.log("🚀 ~ file: rule.js ~ line 128 ~ newDirectOrder ~ res", res)
+   if(res.error )
+   {
+    return {
+      success : false,
+      error : true,
+      msg : res.error
+    }
+   }
+   else
+   {
+    return {
+      success : true,
+      error : false,
+      msg : "Order Placed successfully"
+    }
+   }
+
    return res.error
    
   }
@@ -154,7 +200,8 @@ const newDirectOrder =async (req, credentials) => {
   }
   else if(exchange === "Binanceus") //for binanceus
   {
-    return placeBinanceusDirectOrder(req, credentials);
+     const res = await placeBinanceusDirectOrder(req, credentials);
+     return res;
   }
   else if(exchange === "Liquid")
   {
