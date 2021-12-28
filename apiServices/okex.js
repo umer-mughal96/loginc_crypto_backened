@@ -93,13 +93,8 @@ const placeOkexDirectOrder = async (data, credentials) => {
     }
 
    const ppreHashString = timestamp.iso+'POST'+'/api/v5/trade/order'+JSON.stringify(body);
-
-
-
-
-
    
-//    console.log("🚀 ~ file: okex.js ~ line 96 ~ placeOkexDirectOrder ~ ppreHashString", ppreHashString)
+    //    console.log("🚀 ~ file: okex.js ~ line 96 ~ placeOkexDirectOrder ~ ppreHashString", ppreHashString)
 
     const hashes = signature(ppreHashString)
     console.log("🚀 ~ file: okex.js ~ line 106 ~ placeOkexDirectOrder ~ hashes", hashes)
@@ -148,9 +143,6 @@ const placeOkexDirectOrder = async (data, credentials) => {
     }
     
 }
-
-
-
 module.exports = {
     getOkexAssets,
     placeOkexDirectOrder

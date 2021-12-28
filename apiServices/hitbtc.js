@@ -128,18 +128,13 @@ const placehitBTCDirectOrder = async (data, credentials) => { // eyJvcmciOiJiaXR
             headers: headers
             })
             .then(function(res) {
-              return res.json();
+                return res.json();
               }).then(function(body) {
-              return body;
+                return body;
               });
-      }
-
-      
+      }     
 }
-
-
-
 module.exports = {
-    gethitBTCAssets,
-    placehitBTCDirectOrder
+  gethitBTCAssets,
+  placehitBTCDirectOrder
 }

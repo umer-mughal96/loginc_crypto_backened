@@ -120,23 +120,7 @@ const placeBinanceDirectOrder =async  (data, credentials) => {
       }, config);
       console.log(result);
     }
-
-
-
-  
-
-
-
 }
-
-
-
-
-
-
-
-
-
 
 module.exports = {
   getBinanceAssets,

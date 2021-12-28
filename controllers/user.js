@@ -21,10 +21,6 @@ const liquidServices = require('../apiServices/liquid')
 
 const binanceusServices = require('../apiServices/binanceus')
 
-
-
-
-
 //Update User By Id
 
 const stripePayment = async (req, res, next) => {

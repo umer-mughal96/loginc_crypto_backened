@@ -85,16 +85,8 @@ const placeKrakenDirectOrder = async (data, credentials) => {
     //      console.log(error);
     // })
 
-
-
-    // return signature;
-
-
-        
+    // return signature;       
 }
-
-
-
 module.exports = {
     getKrakenAssets,
     placeKrakenDirectOrder

@@ -5,18 +5,11 @@ const Poloniex = require('poloniex-api-node');
 // const auth = require('poloniex-node-api')
 // console.log("🚀 ~ file: poloniex.js ~ line 6 ~ auth", auth)
 
-
-
-
-
 const getPloniexAssets = async (apiKey, secretKey) => {
     poloniex = new Poloniex(apiKey, secretKey);
     let res = await getUserBalances()
     return res;
 }
-
-
-
 
 
 const getUserBalances = async () => {
@@ -90,13 +83,8 @@ sell(currencyPair, rate, amount, fillOrKill, immediateOrCancel, postOnly [, call
         
     } catch (error) {
         
-    }
-
-    
+    }    
 }
-
-
-
 
 module.exports = {
     getPloniexAssets,

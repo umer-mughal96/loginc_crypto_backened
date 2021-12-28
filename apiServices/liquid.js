@@ -2,8 +2,6 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-
-
 const placeLiquidDirectOrder = async (data, credentials) => {
 // console.log("🚀 ~ file: liquid.js ~ line 5 ~ placeLiquidDirectOrder ~ credentials", credentials)
     
