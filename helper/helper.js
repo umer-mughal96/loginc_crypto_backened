@@ -28,7 +28,6 @@ module.exports = {
         return new Promise (resolve => {
             conn.then(async (db) => {
 
-                let filterName  = exchangeName.charAt(0).toUpperCase() + exchangeName.slice(1);
                 var olderDate = new Date();
                 olderDate.setHours(olderDate.getHours() - 6)
 
@@ -37,19 +36,19 @@ module.exports = {
                         '$match' : {
 
                             '$or' : [
-
                                 { 'lat-updated_time'  :  {'$exists' : false} },
                                 { 'lat-updated_time'  :  {'$gte'    : olderDate} }
                             ],
-                            
-                            'exchanges.exchangeName' : filterName
+                            'exchange' : exchangeName
                         }
                     },
                     {
                         '$project' : {
                             _id        :   {'$toString' : '$_id'},
                             userId     :   "$userId",
-                            exchanges  :   "$exchanges"
+                            exchanges  :   "$exchanges",
+                            apiKey     :   '$apiKey',
+                            secretKey  :   '$secretKey'
                         }
                     },
                     {
